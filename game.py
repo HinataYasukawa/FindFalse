@@ -37,15 +37,19 @@ class NewGame:
                 "正誤" : ['False'],
             }
         )
-        self.k1 = pd.concat([self.k1, pd.DataFrame([self.kn])], ignore_index = True)
+        self.k1 = pd.concat([self.k1, self.kn], ignore_index=True)
 
     def main(self):
         self.makeBoard()
 
-    def button_click(self):
-        self.tex = self.label.cget("text")
-        if self.tex == 'False':
+    def button_click(self, event):
+        print("great!")
+        frame = event.widget
+        df_index = frame._df_index  # 保存したインデックスを取得
+        correctness = self.df.at[df_index, '正誤']
+        if correctness == 'False':
             self.remakeBoard()
+
     
     def remakeBoard(self):
         for widget in self.mainframe.winfo_children():
@@ -54,14 +58,17 @@ class NewGame:
 
     def makeBoard(self):
         #buttonの設定
-        for x in range(10):
-            for y in range(10):
-                self.button_frame = tk.Frame(self.mainframe, width = 50, height = 50, bd = 3, relief ='ridge', bg ='LightGray')
-                self.button_frame.grid(row=x, column=y)
-                self.label = tk.Label(self.button_frame, text="漢", font=("Arial", 24))
-                self.label.pack(pady=5)
+        for idx, row in self.k1.iterrows():
+            x, y = divmod(idx, 10)
+            self.button_frame = tk.Frame(self.mainframe, width=50, height=50, bd=3, relief='ridge', bg='LightGray')
+            self.button_frame.grid(row=x, column=y)
+            self.label = tk.Label(self.button_frame, text=row["漢字"], font=("Arial", 24))
+            self.label.pack(pady=5)
 
-                self.button_frame.bind("<1>", self.button_click)
+            # ここでインデックスをタグとしてフレームに保存
+            self.button_frame._df_index = idx
+            self.button_frame.bind("<1>", self.button_click)
+
 
         self.base.mainloop()
 
