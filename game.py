@@ -43,12 +43,15 @@ class NewGame:
         self.makeBoard()
 
     def button_click(self, event):
-        print("great!")
-        frame = event.widget
-        df_index = frame._df_index  # 保存したインデックスを取得
-        correctness = self.df.at[df_index, '正誤']
+        label = event.widget
+        frame = label.master
+        df_index = frame._df_index
+        correctness = self.k1.at[df_index, '正誤']
         if correctness == 'False':
+            print("正解です")
             self.remakeBoard()
+        else:
+            print("Oh, mistake!")
 
     
     def remakeBoard(self):
@@ -65,9 +68,9 @@ class NewGame:
             self.label = tk.Label(self.button_frame, text=row["漢字"], font=("Arial", 24))
             self.label.pack(pady=5)
 
-            # ここでインデックスをタグとしてフレームに保存
+            # indexの設定
             self.button_frame._df_index = idx
-            self.button_frame.bind("<1>", self.button_click)
+            self.label.bind("<1>", self.button_click)
 
 
         self.base.mainloop()
