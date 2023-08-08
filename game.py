@@ -4,11 +4,7 @@ import pandas as pd
 
 class NewGame:
 
-    def main(self):
-        self.makeBoard()
-
     def __init__(self):
-
         #windowの設定
         self.base = tk.Tk()
         self.base.geometry('600x600')
@@ -29,14 +25,32 @@ class NewGame:
 
         #漢字の設定
         self.labelk1 = ['True' + str(i) for i in range(1, 100)]
-        self.k1 = pd.Series(['田'] * 99, index = self.labelk1)
-        self.k1.append.pd.Series(['由'], index = ['False'])
+        self.k1 = pd.DataFrame(
+            {
+                "漢字" : ['田'] * 99,
+                "正誤" : self.labelk1,
+            }
+        )
+        self.kn = pd.DataFrame(
+            {
+                "漢字" : ['由'],
+                "正誤" : ['False'],
+            }
+        )
+        self.k1 = pd.concat([self.k1, pd.DataFrame([self.kn])], ignore_index = True)
 
+    def main(self):
+        self.makeBoard()
 
     def button_click(self):
         self.tex = self.label.cget("text")
         if self.tex == 'False':
             self.remakeBoard()
+    
+    def remakeBoard(self):
+        for widget in self.mainframe.winfo_children():
+            widget.destroy()
+        self.makeBoard()
 
     def makeBoard(self):
         #buttonの設定
@@ -51,5 +65,6 @@ class NewGame:
 
         self.base.mainloop()
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    game = NewGame()
+    game.main()
