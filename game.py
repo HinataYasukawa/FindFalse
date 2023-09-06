@@ -19,7 +19,7 @@ class NewGame:
         )
         self.mainframe.grid()
 
-        #windowの設定リターンズ
+        #windowの設定2
         self.base.grid_columnconfigure(0, weight=1)
         self.base.grid_rowconfigure(0, weight=1)
 
